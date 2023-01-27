@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>List of Current Projects</h1>
+<br>
+{% for project in projects %}
+
+<ul>
+    <li>{{project.project_name}}
+        <ul>{{project.description}}</ul>
+        <a href="{{ url_for('update_project', project_id = project.id) }}">
+            <button>Update</button>
+        </a>
+        <button>Delete</button>
+    </li>
+</ul>
+
+{% endfor %}
+
+{% endblock %}
