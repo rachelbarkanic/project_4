@@ -15,3 +15,10 @@ class ProjectForm(FlaskForm):
 
     def update_teams(self, teams):
         self.team_selection.choices = [ (team.id, team.team_name) for team in teams ]
+
+class DeleteForm(FlaskForm):
+
+    project_name = StringField('Name of Project to Delete: ', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+    

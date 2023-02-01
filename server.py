@@ -33,6 +33,8 @@ def add_team():
     else:
         return redirect(url_for('home'))
 
+
+
 @app.route('/add-project', methods=['POST'])
 def add_project():
     project_form = ProjectForm()
@@ -52,6 +54,7 @@ def add_project():
 
     else:
         return redirect(url_for('home')) 
+
 
 @app.route('/teams')
 def view_teams():
@@ -83,11 +86,19 @@ def update_project(project_id):
             db.session.commit()
             return redirect(url_for('view_projects'))
         else:
-            return redirect(url_for('home'))   
+            return redirect(url_for('home'))
+
     else:
         return render_template("update-project.html", title = f"Update {project.project_name}", page = "projects", project = project, form = form)
 
 
+@app.route('/delete-project/<project_id>', methods = ['GET', 'POST'])
+def delete_project(project_id):
+    project = Project.query.get(project_id)
+
+    db.session.delete(project)
+    db.session.commit()
+    return redirect('/projects')
 
 if __name__ == '__main__':
     connect_to_db(app)
