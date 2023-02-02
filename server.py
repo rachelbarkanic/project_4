@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 from forms import TeamForm, ProjectForm
 from model import db, User, Team, Project, connect_to_db
 
@@ -89,8 +89,7 @@ def update_project(project_id):
             return redirect(url_for('home'))
 
     else:
-        return render_template("update-project.html", title = f"Update {project.project_name}", page = "projects", project = project, form = form)
-
+        return redirect(url_for('update_project'))
 
 @app.route('/update-team/<team_id>', methods=['GET', 'POST'])
 def update_team(team_id):
@@ -106,8 +105,7 @@ def update_team(team_id):
             return redirect(url_for("home"))
 
     else:
-        return render_template("update-team.html", title = f"Update {team.team_name}", page = "teams", team = team, form = form)
-
+        return redirect(url_for('update_team'))
 
 
 
@@ -123,13 +121,14 @@ def delete_project(project_id):
 @app.route('/delete-team/<team_id>', methods = ['GET', 'POST'])
 def delete_team(team_id):
     team = Team.query.get(team_id)
-
-    if team.projects is not None:
-        return 'Sorry! Cannot delete a team that currently has projects assigned'
-    else:
+    
+    try:
         db.session.delete(team)
         db.session.commit()
         return redirect('/teams')
+    except:
+        return ("Sorry! Teams with projects assigned cannot be deleted!")
+
 
 
 if __name__ == '__main__':
