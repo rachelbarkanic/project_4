@@ -92,6 +92,28 @@ def update_project(project_id):
         return render_template("update-project.html", title = f"Update {project.project_name}", page = "projects", project = project, form = form)
 
 
+@app.route('/update-team/<team_id>', methods=['GET', 'POST'])
+def update_team(team_id):
+    form = TeamForm()
+    form.update_team_name(User.query.get(user_id).teams)
+    team = Team.query.get(team_id)
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            team.team_name = form.team_name.data
+            db.session.add(team)
+            db.session.commit()
+            return redirect(url_for('view_teams'))
+        else:
+            return redirect(url_for('home'))
+
+    else:
+        return render_template("home.html", team = team, form = form)
+
+
+
+
+
 @app.route('/delete-project/<project_id>', methods = ['GET', 'POST'])
 def delete_project(project_id):
     project = Project.query.get(project_id)
@@ -99,6 +121,18 @@ def delete_project(project_id):
     db.session.delete(project)
     db.session.commit()
     return redirect('/projects')
+
+@app.route('/delete-team/<team_id>', methods = ['GET', 'POST'])
+def delete_team(team_id):
+    team = Team.query.get(team_id)
+
+    if team.projects is not None:
+        return 'Cannot delete a team that currently has projects assigned'
+    else:
+        db.session.delete(team)
+        db.session.commit()
+        return redirect('/teams')
+
 
 if __name__ == '__main__':
     connect_to_db(app)

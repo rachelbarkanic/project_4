@@ -3,22 +3,19 @@ from wtforms import StringField, SubmitField, TextAreaField, BooleanField, Selec
 from wtforms.validators import DataRequired, Length
 
 class TeamForm(FlaskForm):
-    team_name = StringField('Team Name', validators=[DataRequired(), Length(min = 4, max = 255)])
+    team_name = StringField('Enter Your Team Name', validators=[DataRequired(), Length(min = 4, max = 255)])
     submit = SubmitField('Submit')
 
+
+
 class ProjectForm(FlaskForm):
-    project_name = StringField('Project Name', validators=[DataRequired(), Length(min = 4, max = 255)])
-    description = TextAreaField('Please Enter a Description')
+    project_name = StringField('Enter Your Project Name', validators=[DataRequired(), Length(min = 4, max = 255)])
+    description = TextAreaField('Please Enter a Description for Your Project')
     completed = BooleanField('Has This Project Been Completed?')
-    team_selection = SelectField('Team')
+    team_selection = SelectField('Select the Team to Complete the Project')
     submit = SubmitField('Submit')
 
     def update_teams(self, teams):
         self.team_selection.choices = [ (team.id, team.team_name) for team in teams ]
 
-class DeleteForm(FlaskForm):
 
-    project_name = StringField('Name of Project to Delete: ', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-    
