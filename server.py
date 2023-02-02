@@ -95,20 +95,18 @@ def update_project(project_id):
 @app.route('/update-team/<team_id>', methods=['GET', 'POST'])
 def update_team(team_id):
     form = TeamForm()
-    form.update_team_name(User.query.get(user_id).teams)
     team = Team.query.get(team_id)
-
-    if request.method == 'POST':
+    if request.method == "POST":
         if form.validate_on_submit():
             team.team_name = form.team_name.data
             db.session.add(team)
             db.session.commit()
-            return redirect(url_for('view_teams'))
+            return redirect(url_for("view_teams"))
         else:
-            return redirect(url_for('home'))
+            return redirect(url_for("home"))
 
     else:
-        return render_template("home.html", team = team, form = form)
+        return render_template("update-team.html", title = f"Update {team.team_name}", page = "teams", team = team, form = form)
 
 
 
@@ -127,7 +125,7 @@ def delete_team(team_id):
     team = Team.query.get(team_id)
 
     if team.projects is not None:
-        return 'Cannot delete a team that currently has projects assigned'
+        return 'Sorry! Cannot delete a team that currently has projects assigned'
     else:
         db.session.delete(team)
         db.session.commit()
